@@ -4,6 +4,7 @@ import { useCreateFormController } from "./components/hooks/useCreateFromControl
 import ReactSelect from "react-select";
 import { Input as MUIInput } from "@mui/material";
 import Input from "./components/Input/Input";
+import Select from "./components/Select/Select";
 
 function submitHandlerValid(data: object) {
   console.log("submitted VALID form", data);
@@ -19,25 +20,28 @@ type User = {
   streetName: string;
   zipCode: string;
   email: string;
-  country: string;
+  country: { value: string; label: string };
+  gender: { value: string; label: string };
   otherProps: {
     someValue: string;
   };
 };
 
-const options = [
+const countries = [
   { value: "Nederland", label: "Nederland" },
   { value: "Duitsland", label: "Duitsland" },
   { value: "Frankrijk", label: "Frankrijk" },
 ];
 
+const gender = [
+  { value: "Female", label: "Female" },
+  { value: "Male", label: "Male" },
+  { value: "Unknown", label: "Unknown" },
+];
+
 function App() {
-  const {
-    Form,
-    FormControl,
-    methods,
-    Input: LocalCustomInput,
-  } = useCreateFormController<User>();
+  const { Form, FormControl, methods, InputControl } =
+    useCreateFormController<User>();
 
   return (
     <Form onValid={submitHandlerValid} onInvalid={submitHandlerInvalid}>
@@ -57,26 +61,30 @@ function App() {
 
         <div>
           <pre>Using Preset Form controlled component from hook</pre>
-          <LocalCustomInput
+          <InputControl
             name="lastName"
             placeholder="Enter last name"
             label="LAST NAME: "
             rules={{ required: "Last name is required" }}
           />
 
-          <LocalCustomInput
+          <InputControl
             name="otherProps.someValue"
             placeholder="Enter some value"
             label="SOME VALUE: "
             rules={{ required: "SOME VALUE IS REQUIRED" }}
           />
+
+          <FormControl name="gender">
+            <Select placeholder="Select gender" options={gender} />
+          </FormControl>
         </div>
 
         <hr />
 
         <div>
           <pre>Using FormControl for wrapping native HTML elements </pre>
-          <FormControl name="streetName" isNative omitFieldState>
+          <FormControl name="streetName" isNative>
             <input type="text" placeholder="Enter streetName" />
           </FormControl>
         </div>
@@ -88,7 +96,7 @@ function App() {
             Using FormControl for wrapping Local Custom NON-Controlled
             Components
           </pre>
-          <FormControl name="zipCode" omitFieldState>
+          <FormControl name="zipCode">
             <Input placeholder="Enter zip code" />
           </FormControl>
         </div>
@@ -99,15 +107,15 @@ function App() {
           <pre> Using FormControl for wrapping Third Party Components</pre>
 
           <p>Mui Input</p>
-          <FormControl name="email" omitFieldState>
+          <FormControl name="email">
             <MUIInput placeholder="Enter email" />
           </FormControl>
 
           <br />
 
           <p>React Select</p>
-          <FormControl name="country" omitFieldState>
-            <ReactSelect options={options} placeholder="Select country" />
+          <FormControl name="country">
+            <ReactSelect options={countries} placeholder="Select country" />
           </FormControl>
         </div>
 

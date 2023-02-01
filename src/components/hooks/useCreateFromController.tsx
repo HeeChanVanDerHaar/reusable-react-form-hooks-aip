@@ -6,12 +6,12 @@ import { createForm, createFormControl, createInput } from "../Form/helpers";
 export function useCreateFormController<T extends FieldValues>() {
   const methods = useForm<T>();
   const Form = React.useMemo(() => createForm<T>(methods), []);
-  const Input = React.useMemo(() => createInput<T>(methods.control), []);
+  const InputControl = React.useMemo(() => createInput<T>(methods.control), []);
   const FormControl = React.useMemo(
     () => createFormControl<T>(methods.control, methods.register),
     []
   );
 
   // Exposing Components and methods
-  return { Form, Input, FormControl, methods };
+  return { Form, InputControl, FormControl, methods };
 }

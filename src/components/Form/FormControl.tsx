@@ -22,7 +22,6 @@ export type FormControlBaseProps<T extends FieldValues> = {
     "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
   >; // TODO: Extract to own custom type
   isNative?: boolean;
-  omitFieldState?: boolean; // TODO: 🤔 Boolean for handling non controlled components which don't accept a fieldstate prop. Third party element or Native elements
 };
 
 export function FormControl<T extends FieldValues>(
@@ -31,7 +30,6 @@ export function FormControl<T extends FieldValues>(
   const {
     children,
     isNative,
-    omitFieldState = false,
     name,
     // Need to pas a defaultvalue here otherwise react hooks form will complain. https://github.com/react-hook-form/react-hook-form/discussions/6443
     // Can not get the typing right here :(

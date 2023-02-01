@@ -1,6 +1,5 @@
 import React, { forwardRef } from "react";
-import type { FC, InputHTMLAttributes } from "react";
-import { FieldPath, FieldValues } from "react-hook-form";
+import type { InputHTMLAttributes } from "react";
 import Input from "./Input";
 
 export type InputControlProps = {
@@ -24,5 +23,4 @@ const InputControl = forwardRef<HTMLInputElement, InputControlProps>(
 );
 
 Input.displayName = "InputControl";
-
 export default InputControl;
