@@ -1,11 +1,17 @@
 import React from "react";
-import type { FieldValues } from "react-hook-form";
-import { createController, createForm, createInput } from "../Form/helpers";
+import { FieldValues, useForm } from "react-hook-form";
+import { createForm, createFormControl, createInput } from "../Form/helpers";
 
+// Passing on the client side the form config to this hook
 export function useCreateFormController<T extends FieldValues>() {
-  const Form = React.useMemo(() => createForm<T>(), []);
-  const Input = React.useMemo(() => createInput<T>(), []);
-  const Controller = React.useMemo(() => createController<T>(), []);
+  const methods = useForm<T>();
+  const Form = React.useMemo(() => createForm<T>(methods), []);
+  const Input = React.useMemo(() => createInput<T>(methods.control), []);
+  const FormControl = React.useMemo(
+    () => createFormControl<T>(methods.control, methods.register),
+    []
+  );
 
-  return { Form, Input, Controller };
+  // Exposing Components and methods
+  return { Form, Input, FormControl, methods };
 }

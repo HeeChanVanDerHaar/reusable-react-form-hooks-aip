@@ -1,6 +1,8 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, InputHTMLAttributes } from "react";
 
-import { InputControllerProps } from "./InputController";
+export type InputControllerProps = {
+  value?: string;
+} & InputHTMLAttributes<HTMLInputElement>;
 
 const Input = forwardRef<HTMLInputElement, InputControllerProps>(
   (props, ref) => {

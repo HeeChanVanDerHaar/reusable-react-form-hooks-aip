@@ -1,68 +1,87 @@
 import React from "react";
 import "./App.css";
 import { useCreateFormController } from "./components/hooks/useCreateFromController";
-import SelectAtom from "./components/Select/Select";
-import InputAtom from "./components/Input/Input";
-import ConnectForm from "./components/ConnectForm";
+import ReactSelect from "react-select";
+import { Input as MUIInput } from "@mui/material";
+import Input from "./components/Input/Input";
 
 function submitHandlerValid(data: object) {
-  console.log("submitted valid form", data);
+  console.log("submitted VALID form", data);
 }
 
 function submitHandlerInvalid(data: object) {
-  console.log("submitted invalid form", data);
+  console.warn("submitted INVALID form", data);
 }
 
-type Data = {
-  testInputController: string;
-  testText: string;
-  testSelect: string;
-  testNumber: number;
-  testBoolean: boolean;
-  naar: {
-    testText: string;
-  };
+type User = {
+  firstName: string;
+  lastName: string;
+  streetName: string;
+  zipCode: string;
+  email: string;
+  country: string;
+  // naar: {
+  //   testText: string;
+  // };
 };
 
 const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { value: "Nederland", label: "Nederland" },
+  { value: "Duitsland", label: "Duitsland" },
+  { value: "Frankrijk", label: "Frankrijk" },
 ];
 
-export const DeepNest = ({ name }: { name: string }) => (
-  <ConnectForm>{({ register }) => <input {...register(name)} />}</ConnectForm>
-);
-
 function App() {
-  const { Form, Input, Controller } = useCreateFormController<Data>();
+  const {
+    Form,
+    FormControl,
+    methods,
+    Input: LocalCustomInput,
+  } = useCreateFormController<User>();
 
   return (
     <Form onValid={submitHandlerValid} onInvalid={submitHandlerInvalid}>
-      <h1>My First React Hook Form </h1>
-      <Input name="naar.testText" type="text" required label="a label" />
-      <Input name="testNumber" type="number" required label="a label" />
-      <Input name="testBoolean" type="checkbox" required label="a label" />
+      <div>
+        <h1>My First React Hook Form </h1>
 
-      <Controller
-        name="testInputController"
-        label="a label"
-        Component={InputAtom}
-        componentProps={{ type: "text" }}
-      />
+        {/* Native HTML Input */}
+        <input
+          placeholder="Enter first name"
+          type="text"
+          {...methods.register("firstName")}
+        />
 
-      <br />
-      <br />
+        {/* Using Preset Form controlled component from hook */}
+        <LocalCustomInput
+          name="lastName"
+          placeholder="Enter last name"
+          label="LAST NAME: "
+        />
 
-      <Controller
-        name="testSelect"
-        label="a label"
-        Component={SelectAtom}
-        componentProps={{ options: options }}
-      />
-      <Input name="testText" type="text" required label="a label" />
+        {/* Using FormControl for wrapping native HTML elements */}
+        <FormControl name="streetName" isNative omitFieldState>
+          <input type="text" placeholder="Enter streetName" />
+        </FormControl>
 
-      <button type="submit">Submit</button>
+        {/* Using FormControl for wrapping Local Custom NON-Controlled Components */}
+        <FormControl name="zipCode" omitFieldState>
+          <Input placeholder="Enter zip code" />
+          {/* <Input placeholder="Enter zip code" /> */}
+        </FormControl>
+
+        <br />
+
+        {/* Using FormControl for wrapping Third Party Components */}
+        <FormControl name="email" omitFieldState>
+          <MUIInput placeholder="Enter email" />
+        </FormControl>
+        <br />
+        <FormControl name="country" omitFieldState>
+          <ReactSelect options={options} placeholder="Select country" />
+        </FormControl>
+
+        <button type="submit">Submit</button>
+      </div>
     </Form>
   );
 }

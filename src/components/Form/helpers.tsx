@@ -1,70 +1,65 @@
 import React from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Control, UseFormRegister, UseFormReturn } from "react-hook-form";
 import type { FieldValues, FieldPath } from "react-hook-form";
 
-import InputController from "../Input/InputController";
-import type { InputControllerProps } from "../Input/InputController";
-
-import FormController from "./FormController";
-import type { FormControllerProps } from "./FormController";
+import type { InputControlProps } from "../Input/InputControl";
 
 import { assertFC } from "../../types";
-import { ValueHolder } from "../../types/values";
+import { FormControl, FormControlBaseProps } from "./FormControl";
+import InputControl from "../Input/InputControl";
 
-type InputProps<T extends FieldValues> = {
-  name: FieldPath<T>;
-  label?: string;
-} & InputControllerProps;
-
-type ControllerProps<T> = {
-  label?: string;
-} & Pick<ValueHolder<T>, "name"> &
-  FormControllerProps;
-
-type InputType<T extends FieldValues> = React.ReactElement<InputProps<T>>;
-
-type ControllerType<T> = React.ReactElement<ControllerProps<T>>;
-
-interface FormProps<T extends FieldValues> {
-  data?: Array<T>;
+type FormProps = {
   onValid: (data: object) => void;
   onInvalid: (data: object) => void;
-  children?:
-    | InputType<T>[]
-    | InputType<T>
-    | ControllerType<T>
-    | ControllerType<T>[];
-}
+  children: React.ReactElement | React.ReactElement[];
+};
 
-export const createForm = <T extends unknown>() => {
-  function Form<T extends FieldValues>({
+type FormControlProps<T extends FieldValues> = {
+  children: React.ReactElement | React.ReactElement[];
+} & Partial<FormControlBaseProps<T>>;
+
+export const createForm = <T extends FieldValues>(
+  methods: UseFormReturn<T>
+) => {
+  function Form({
     children,
     onValid,
     onInvalid,
-  }: FormProps<T>): React.ReactElement | null {
-    const methods = useForm<T>({
-      defaultValues: { testText: "ksdjfh" } as any,
-    });
-
+  }: FormProps): React.ReactElement | null {
     const { handleSubmit } = methods;
 
-    return (
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onValid, onInvalid)}>{children}</form>
-      </FormProvider>
-    );
+    return <form onSubmit={handleSubmit(onValid, onInvalid)}>{children}</form>;
   }
   assertFC(Form);
 
   return Form;
 };
 
-export const createInput =
-  <T extends FieldValues>() =>
-  (props: InputProps<T>) =>
-    <InputController {...props} />;
+type InputControlFunc<TDataType extends FieldValues> = {
+  name: FieldPath<TDataType>;
+} & InputControlProps;
 
-export const createController =
-  <T extends unknown>() =>
-  (props: ControllerProps<T> & { Component: React.FC<any> }) =>
-    <FormController {...props} />;
+export const createInput =
+  <T extends FieldValues>(control: Control<T>) =>
+  ({ name, rules, fieldState, ...restProps }: InputControlFunc<T>) =>
+    (
+      <FormControl name={name} control={control} rules={rules}>
+        <InputControl {...restProps} fieldState={fieldState} />
+      </FormControl>
+    );
+
+export const createFormControl =
+  <T extends FieldValues>(control: Control<T>, register: UseFormRegister<T>) =>
+  (props: FormControlProps<T>) =>
+    (
+      <FormControl
+        rules={props.rules}
+        isNative={props.isNative}
+        name={props.name!} // TODO: Get the typing correct
+        control={control}
+        register={register}
+        omitFieldState={props.omitFieldState}
+      >
+        {props?.children}
+      </FormControl>
+    );

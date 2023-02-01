@@ -3,8 +3,10 @@ import ReactSelect from "react-select";
 
 export type SelectProps = ComponentProps<typeof ReactSelect>;
 
-const Select: React.FC<ComponentProps<typeof ReactSelect>> = ({ ...props }) => (
-  <ReactSelect {...props} />
+const Select: React.FC<ComponentProps<typeof ReactSelect>> = React.forwardRef(
+  (props, ref) => {
+    return <ReactSelect {...props} ref={ref} />;
+  }
 );
 
 export default Select;

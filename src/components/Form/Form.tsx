@@ -2,8 +2,8 @@ import { ReactElement } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { assertFC } from "../../types";
-import InputController from "../Input/InputController";
-import type { InputControllerProps } from "../Input/InputController";
+import InputController from "../Input/InputControl";
+import type { InputControlProps } from "../Input/InputControl";
 
 import { FormElement } from "./FormStyles";
 import ConnectForm from "../ConnectForm";
@@ -27,7 +27,7 @@ type ValueHolder<T> = Values<{
 type InputProps_<T> = {
   label?: string;
 } & ValueHolder<T> &
-  InputControllerProps;
+  InputControlProps<any>;
 
 type InputType<T> = React.ReactElement<InputProps_<T>>;
 
