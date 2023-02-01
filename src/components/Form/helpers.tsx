@@ -1,9 +1,7 @@
 import React from "react";
 import { Control, UseFormRegister, UseFormReturn } from "react-hook-form";
 import type { FieldValues, FieldPath } from "react-hook-form";
-
 import type { InputControlProps } from "../Input/InputControl";
-
 import { assertFC } from "../../types";
 import { FormControl, FormControlBaseProps } from "./FormControl";
 import InputControl from "../Input/InputControl";
@@ -16,7 +14,8 @@ type FormProps = {
 
 type FormControlProps<T extends FieldValues> = {
   children: React.ReactElement | React.ReactElement[];
-} & Partial<FormControlBaseProps<T>>;
+  name: FieldPath<T>;
+} & Partial<Omit<FormControlBaseProps<T>, "name">>;
 
 export const createForm = <T extends FieldValues>(
   methods: UseFormReturn<T>
@@ -37,6 +36,7 @@ export const createForm = <T extends FieldValues>(
 
 type InputControlFunc<TDataType extends FieldValues> = {
   name: FieldPath<TDataType>;
+  rules?: any;
 } & InputControlProps;
 
 export const createInput =
@@ -50,16 +50,9 @@ export const createInput =
 
 export const createFormControl =
   <T extends FieldValues>(control: Control<T>, register: UseFormRegister<T>) =>
-  (props: FormControlProps<T>) =>
+  ({ children, ...restProps }: FormControlProps<T>) =>
     (
-      <FormControl
-        rules={props.rules}
-        isNative={props.isNative}
-        name={props.name!} // TODO: Get the typing correct
-        control={control}
-        register={register}
-        omitFieldState={props.omitFieldState}
-      >
-        {props?.children}
+      <FormControl control={control!} register={register!} {...restProps}>
+        {children}
       </FormControl>
     );

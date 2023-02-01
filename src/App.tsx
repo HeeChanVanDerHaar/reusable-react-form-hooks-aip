@@ -20,9 +20,9 @@ type User = {
   zipCode: string;
   email: string;
   country: string;
-  // naar: {
-  //   testText: string;
-  // };
+  otherProps: {
+    someValue: string;
+  };
 };
 
 const options = [
@@ -44,41 +44,72 @@ function App() {
       <div>
         <h1>My First React Hook Form </h1>
 
-        {/* Native HTML Input */}
-        <input
-          placeholder="Enter first name"
-          type="text"
-          {...methods.register("firstName")}
-        />
+        <div>
+          <pre>Native HTML Element</pre>
+          <input
+            placeholder="Enter first name"
+            type="text"
+            {...methods.register("firstName")}
+          />
+        </div>
 
-        {/* Using Preset Form controlled component from hook */}
-        <LocalCustomInput
-          name="lastName"
-          placeholder="Enter last name"
-          label="LAST NAME: "
-        />
+        <hr />
 
-        {/* Using FormControl for wrapping native HTML elements */}
-        <FormControl name="streetName" isNative omitFieldState>
-          <input type="text" placeholder="Enter streetName" />
-        </FormControl>
+        <div>
+          <pre>Using Preset Form controlled component from hook</pre>
+          <LocalCustomInput
+            name="lastName"
+            placeholder="Enter last name"
+            label="LAST NAME: "
+            rules={{ required: "Last name is required" }}
+          />
 
-        {/* Using FormControl for wrapping Local Custom NON-Controlled Components */}
-        <FormControl name="zipCode" omitFieldState>
-          <Input placeholder="Enter zip code" />
-          {/* <Input placeholder="Enter zip code" /> */}
-        </FormControl>
+          <LocalCustomInput
+            name="otherProps.someValue"
+            placeholder="Enter some value"
+            label="SOME VALUE: "
+            rules={{ required: "SOME VALUE IS REQUIRED" }}
+          />
+        </div>
 
-        <br />
+        <hr />
 
-        {/* Using FormControl for wrapping Third Party Components */}
-        <FormControl name="email" omitFieldState>
-          <MUIInput placeholder="Enter email" />
-        </FormControl>
-        <br />
-        <FormControl name="country" omitFieldState>
-          <ReactSelect options={options} placeholder="Select country" />
-        </FormControl>
+        <div>
+          <pre>Using FormControl for wrapping native HTML elements </pre>
+          <FormControl name="streetName" isNative omitFieldState>
+            <input type="text" placeholder="Enter streetName" />
+          </FormControl>
+        </div>
+
+        <hr />
+
+        <div>
+          <pre>
+            Using FormControl for wrapping Local Custom NON-Controlled
+            Components
+          </pre>
+          <FormControl name="zipCode" omitFieldState>
+            <Input placeholder="Enter zip code" />
+          </FormControl>
+        </div>
+
+        <hr />
+
+        <div>
+          <pre> Using FormControl for wrapping Third Party Components</pre>
+
+          <p>Mui Input</p>
+          <FormControl name="email" omitFieldState>
+            <MUIInput placeholder="Enter email" />
+          </FormControl>
+
+          <br />
+
+          <p>React Select</p>
+          <FormControl name="country" omitFieldState>
+            <ReactSelect options={options} placeholder="Select country" />
+          </FormControl>
+        </div>
 
         <button type="submit">Submit</button>
       </div>

@@ -6,13 +6,13 @@ import Input from "./Input";
 export type InputControlProps = {
   value?: string;
   label?: string;
-  fieldState?: any; // TODO: get the typing right
-  rules?: any; // TODO: get the typing right
+  formState?: any; // TODO: get the typing right from react-hook-form
+  fieldState?: any; // TODO: get the typing right from react-hook-form
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const InputControl = forwardRef<HTMLInputElement, InputControlProps>(
   (props, ref) => {
-    const { label, fieldState, ...restProps } = props;
+    const { label, fieldState, formState, ...restProps } = props;
     return (
       <div>
         <label>{label}</label>
